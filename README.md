@@ -21,7 +21,7 @@ A complete Flutter e-commerce mobile application based on Figma designs, integra
 
 3. **Run the Application:**
    - For **macOS natively** (Recommended for Apple Silicon):
-     ```bash
+     ``bash
      flutter run -d macos
      ```
    - For **Android or iOS Emulator**:
