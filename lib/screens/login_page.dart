@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/app_provider.dart';
 import 'home_page.dart';
 import '../utils/constants.dart';
 
@@ -15,12 +17,15 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
 
-  void _login() {
+  void _login() async {
     if (_formKey.currentState?.validate() ?? false) {
       final email = _emailController.text.trim();
       final password = _passwordController.text;
 
-      if (email == 'mobile@alisonsgroup.com' && password == '12345678') {
+      final success = await Provider.of<AppProvider>(context, listen: false).login(email, password);
+
+      if (!mounted) return;
+      if (success) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const HomePage()),
@@ -29,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
-              'Invalid credentials. Try: mobile@alisonsgroup.com / 12345678',
+              'Invalid credentials. Login failed.',
             ),
           ),
         );

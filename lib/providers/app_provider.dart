@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/models.dart';
 import '../services/api_service.dart';
+import '../utils/constants.dart';
 
 class AppProvider extends ChangeNotifier {
   final ApiService _apiService = ApiService();
@@ -21,6 +22,16 @@ class AppProvider extends ChangeNotifier {
   int get cartItemCount => cart.fold(0, (sum, item) => sum + item.quantity);
   double get cartTotal =>
       cart.fold(0, (sum, item) => sum + (item.product.price * item.quantity));
+
+  Future<bool> login(String email, String password) async {
+    final data = await _apiService.login(email, password);
+    if (data != null && data['success'] == 1 && data['customerdata'] != null) {
+      AppConstants.testId = data['customerdata']['id']?.toString() ?? '';
+      AppConstants.testToken = data['customerdata']['token']?.toString() ?? '';
+      return true;
+    }
+    return false;
+  }
 
   Future<void> loadHomeData() async {
     isLoadingHome = true;

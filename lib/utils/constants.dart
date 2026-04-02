@@ -4,8 +4,8 @@ class AppConstants {
   static const String apiBaseUrl = 'https://sungod.demospro2023.in.net/api';
   static const String imageBaseUrl = 'https://sungod.demospro2023.in.net';
 
-  static const String testId = 'xWO';
-  static const String testToken = 'ah5Ddu3QeQmNmIlDEF4fdIzNYaGxPrxqoK29Jsnh';
+  static String testId = '80y';
+  static String testToken = 'ZLyKKL30tpLYkclzTvZSXeeKBDRO8TSzx02iPyXT';
 
   // Colors
   static const Color primaryColor = Color(0xFF87350F);
