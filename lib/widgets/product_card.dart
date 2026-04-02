@@ -34,20 +34,29 @@ class ProductCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image and badge/favorite
             Stack(
               children: [
                 ClipRRect(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(12),
+                  ),
                   child: Container(
                     height: 120,
                     width: double.infinity,
                     color: Colors.grey.shade100,
-                    child: product.image.isNotEmpty ? CachedNetworkImage(
-                      imageUrl: AppConstants.getProductImageUrl(product.image),
-                      fit: BoxFit.cover,
-                      errorWidget: (context, url, error) => const Icon(Icons.image, size: 50, color: Colors.grey),
-                    ) : const Icon(Icons.image, size: 50, color: Colors.grey),
+                    child: product.image.isNotEmpty
+                        ? CachedNetworkImage(
+                            imageUrl: AppConstants.getProductImageUrl(
+                              product.image,
+                            ),
+                            fit: BoxFit.cover,
+                            errorWidget: (context, url, error) => const Icon(
+                              Icons.image,
+                              size: 50,
+                              color: Colors.grey,
+                            ),
+                          )
+                        : const Icon(Icons.image, size: 50, color: Colors.grey),
                   ),
                 ),
                 if (product.oldPrice > product.price && product.price > 0)
@@ -55,14 +64,21 @@ class ProductCard extends StatelessWidget {
                     top: 8,
                     left: 8,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
                       decoration: BoxDecoration(
                         color: AppConstants.primaryColor,
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
                         '${((product.oldPrice - product.price) / product.oldPrice * 100).toStringAsFixed(0)}% off',
-                        style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
@@ -72,7 +88,11 @@ class ProductCard extends StatelessWidget {
                   child: IconButton(
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(),
-                    icon: const Icon(Icons.favorite_border, size: 18, color: AppConstants.primaryColor),
+                    icon: const Icon(
+                      Icons.favorite_border,
+                      size: 18,
+                      color: AppConstants.primaryColor,
+                    ),
                     onPressed: () {},
                   ),
                 ),
@@ -87,14 +107,21 @@ class ProductCard extends StatelessWidget {
                     product.name,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Row(
                     children: [
                       Text(
                         '₹ ${product.price.toStringAsFixed(2)}',
-                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppConstants.primaryColor),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: AppConstants.primaryColor,
+                        ),
                       ),
                       const SizedBox(width: 4),
                       if (product.oldPrice > product.price)
@@ -118,11 +145,18 @@ class ProductCard extends StatelessWidget {
                         foregroundColor: AppConstants.primaryColor,
                         elevation: 0,
                         padding: EdgeInsets.zero,
-                        side: const BorderSide(color: AppConstants.primaryColor),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                        side: const BorderSide(
+                          color: AppConstants.primaryColor,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6),
+                        ),
                       ),
                       onPressed: () {
-                        Provider.of<AppProvider>(context, listen: false).addToCart(product);
+                        Provider.of<AppProvider>(
+                          context,
+                          listen: false,
+                        ).addToCart(product);
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text('${product.name} added to cart'),
@@ -133,12 +167,18 @@ class ProductCard extends StatelessWidget {
                       child: const Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('Add ', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                          Text(
+                            'Add ',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                           Icon(Icons.shopping_cart_outlined, size: 14),
                         ],
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

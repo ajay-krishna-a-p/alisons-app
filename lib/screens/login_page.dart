@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../providers/app_provider.dart';
 import 'home_page.dart';
 import '../utils/constants.dart';
 
@@ -17,22 +15,23 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
 
-  void _login() async {
+  void _login() {
     if (_formKey.currentState?.validate() ?? false) {
       final email = _emailController.text.trim();
       final password = _passwordController.text;
 
-      final success = await Provider.of<AppProvider>(context, listen: false).login(email, password);
-
-      if (!mounted) return;
-      if (success) {
+      if (email == 'mobile@alisonsgroup.com' && password == '12345678') {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const HomePage()),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Invalid credentials. Login failed.')),
+          const SnackBar(
+            content: Text(
+              'Invalid credentials. Try: mobile@alisonsgroup.com / 12345678',
+            ),
+          ),
         );
       }
     }
@@ -87,8 +86,9 @@ class _LoginPageState extends State<LoginPage> {
                           borderSide: BorderSide.none,
                         ),
                       ),
-                      validator: (value) =>
-                          value == null || value.isEmpty ? 'Email required' : null,
+                      validator: (value) => value == null || value.isEmpty
+                          ? 'Email required'
+                          : null,
                     ),
                     const SizedBox(height: 20),
                     const Text(
@@ -113,7 +113,9 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         suffixIcon: IconButton(
                           icon: Icon(
-                            _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                            _obscurePassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
                             color: Colors.grey,
                           ),
                           onPressed: () {
@@ -123,8 +125,9 @@ class _LoginPageState extends State<LoginPage> {
                           },
                         ),
                       ),
-                      validator: (value) =>
-                          value == null || value.isEmpty ? 'Password required' : null,
+                      validator: (value) => value == null || value.isEmpty
+                          ? 'Password required'
+                          : null,
                     ),
                     const SizedBox(height: 12),
                     Align(

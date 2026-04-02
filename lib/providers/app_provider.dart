@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/models.dart';
 import '../services/api_service.dart';
-import '../utils/constants.dart';
 
 class AppProvider extends ChangeNotifier {
   final ApiService _apiService = ApiService();
@@ -13,24 +12,15 @@ class AppProvider extends ChangeNotifier {
   List<Category> categories = [];
   List<Product> newArrivals = [];
   List<Product> featuredProducts = [];
-  List<Product> currentProducts = []; 
+  List<Product> currentProducts = [];
   List<dynamic> banners = [];
 
   // Cart
   List<CartItem> cart = [];
 
   int get cartItemCount => cart.fold(0, (sum, item) => sum + item.quantity);
-  double get cartTotal => cart.fold(0, (sum, item) => sum + (item.product.price * item.quantity));
-
-  Future<bool> login(String email, String password) async {
-    final data = await _apiService.login(email, password);
-    if (data != null && data['success'] == 1 && data['customerdata'] != null) {
-      AppConstants.testId = data['customerdata']['id']?.toString() ?? '';
-      AppConstants.testToken = data['customerdata']['token']?.toString() ?? '';
-      return true;
-    }
-    return false;
-  }
+  double get cartTotal =>
+      cart.fold(0, (sum, item) => sum + (item.product.price * item.quantity));
 
   Future<void> loadHomeData() async {
     isLoadingHome = true;
@@ -49,7 +39,7 @@ class AppProvider extends ChangeNotifier {
             .map((e) => Product.fromJson(e))
             .toList();
       }
-      
+
       // we'll treat new arrivals as featured/popular just as mock since we need lists
       featuredProducts = newArrivals;
 
@@ -69,22 +59,19 @@ class AppProvider extends ChangeNotifier {
     currentProducts = [];
     notifyListeners();
 
-    // The API doc gives a products endpoint, but it might just return items
-    // Let's use new_arrivals from home if it fails for dummy purpose or actual data
     final data = await _apiService.fetchProducts(categorySlug: slug);
     if (data != null && data['success'] == 1 && data['products'] != null) {
       currentProducts = (data['products'] as List)
-            .map((e) => Product.fromJson(e))
-            .toList();
+          .map((e) => Product.fromJson(e))
+          .toList();
     } else {
-      // Dummy fetch fallback using newarrivals if products API doesn't work as expected
       final homeData = await _apiService.fetchHomeData();
       if (homeData != null && homeData['newarrivals'] != null) {
-         currentProducts = (homeData['newarrivals'] as List)
+        currentProducts = (homeData['newarrivals'] as List)
             .map((e) => Product.fromJson(e))
             .toList();
       } else {
-         errorMessage = 'Failed to load products';
+        errorMessage = 'Failed to load products';
       }
     }
 
