@@ -22,7 +22,10 @@ class _LoginPageState extends State<LoginPage> {
       final email = _emailController.text.trim();
       final password = _passwordController.text;
 
-      final success = await Provider.of<AppProvider>(context, listen: false).login(email, password);
+      final success = await Provider.of<AppProvider>(
+        context,
+        listen: false,
+      ).login(email, password);
 
       if (!mounted) return;
       if (success) {
@@ -32,11 +35,7 @@ class _LoginPageState extends State<LoginPage> {
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              'Invalid credentials. Login failed.',
-            ),
-          ),
+          const SnackBar(content: Text('Invalid credentials. Login failed.')),
         );
       }
     }

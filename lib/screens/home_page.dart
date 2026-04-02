@@ -19,6 +19,30 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
+  final ScrollController _categoriesScrollController = ScrollController();
+  final ScrollController _featuredProductsScrollController = ScrollController();
+  final ScrollController _bestSellingScrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _categoriesScrollController.dispose();
+    _featuredProductsScrollController.dispose();
+    _bestSellingScrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollList(ScrollController controller, bool right) {
+    if (controller.hasClients) {
+      final double offset = right
+          ? controller.offset + 200
+          : controller.offset - 200;
+      controller.animateTo(
+        offset.clamp(0.0, controller.position.maxScrollExtent),
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
 
   @override
   void initState() {
@@ -33,31 +57,29 @@ class _HomePageState extends State<HomePage> {
     if (_currentIndex == 2) {
       return const CartPage();
     }
-    
+
     return Scaffold(
-      appBar: _currentIndex == 0 ? AppBar(
-        backgroundColor: AppConstants.primaryColor,
-        elevation: 0,
-        title: Row(
-          children: [
-            const Icon(Icons.shopping_cart, color: Colors.green),
-            const Spacer(),
-            IconButton(
-              icon: const Icon(Icons.search, color: Colors.white),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: const Icon(Icons.favorite_border, color: Colors.white),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: const Icon(Icons.notifications_none, color: Colors.white),
-              onPressed: () {},
-            ),
-          ],
-        ),
-      ) : AppBar(title: const Text('Comming Soon')),
-      body: _currentIndex == 0 ? _buildHomeBody() : const Center(child: Text('Coming Soon')),
+      appBar: _currentIndex == 0
+          ? AppBar(
+              backgroundColor: AppConstants.primaryColor,
+              elevation: 0,
+              title: Row(
+                children: [
+                  Image.asset(
+                    'assets/beautiful-unique-logo-design-ecommerce-retail-company_1287271-9935-removebg-preview 1.png',
+                    height: 40,
+                  ),
+                  const Spacer(),
+                  Image.asset('assets/mynaui_search.png', height: 40),
+                  Image.asset('assets/ph_heart.png', height: 40),
+                  Image.asset('assets/Vector.png', height: 40),
+                ],
+              ),
+            )
+          : AppBar(title: const Text('Comming Soon')),
+      body: _currentIndex == 0
+          ? _buildHomeBody()
+          : const Center(child: Text('Coming Soon')),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) {
@@ -69,10 +91,7 @@ class _HomePageState extends State<HomePage> {
         selectedItemColor: AppConstants.primaryColor,
         unselectedItemColor: Colors.grey,
         items: [
-          const BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
+          const BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           const BottomNavigationBarItem(
             icon: Icon(Icons.grid_view),
             label: 'Categories',
@@ -96,7 +115,10 @@ class _HomePageState extends State<HomePage> {
                           ),
                           child: Text(
                             '${provider.cartItemCount}',
-                            style: const TextStyle(fontSize: 10, color: Colors.white),
+                            style: const TextStyle(
+                              fontSize: 10,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
@@ -132,11 +154,26 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildBanner(provider.banners),
-                _buildCategories(provider.categories),
-                _buildSectionTitle('Featured Products'),
-                _buildProductList(provider.featuredProducts),
-                _buildSectionTitle('Daily Best Selling'),
-                _buildProductList(provider.featuredProducts.reversed.toList()),
+                _buildCategories(
+                  provider.categories,
+                  _categoriesScrollController,
+                ),
+                _buildSectionTitle(
+                  'Featured Products',
+                  _featuredProductsScrollController,
+                ),
+                _buildProductList(
+                  provider.featuredProducts,
+                  _featuredProductsScrollController,
+                ),
+                _buildSectionTitle(
+                  'Daily Best Selling',
+                  _bestSellingScrollController,
+                ),
+                _buildProductList(
+                  provider.featuredProducts.reversed.toList(),
+                  _bestSellingScrollController,
+                ),
                 // Add more sections as needed matching the UI
                 const SizedBox(height: 20),
               ],
@@ -178,7 +215,10 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildCategories(List<Category> categories) {
+  Widget _buildCategories(
+    List<Category> categories,
+    ScrollController controller,
+  ) {
     return Column(
       children: [
         Padding(
@@ -188,20 +228,32 @@ class _HomePageState extends State<HomePage> {
             children: [
               const Text(
                 'Categories',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppConstants.primaryColor),
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppConstants.primaryColor,
+                ),
               ),
               Row(
                 children: [
-                  const Icon(Icons.chevron_left, color: Colors.grey),
-                  const Icon(Icons.chevron_right, color: Colors.black),
+                  GestureDetector(
+                    onTap: () => _scrollList(controller, false),
+                    child: const Icon(Icons.chevron_left, color: Colors.grey),
+                  ),
+                  const SizedBox(width: 8),
+                  GestureDetector(
+                    onTap: () => _scrollList(controller, true),
+                    child: const Icon(Icons.chevron_right, color: Colors.black),
+                  ),
                 ],
-              )
+              ),
             ],
           ),
         ),
         SizedBox(
           height: 110,
           child: ListView.builder(
+            controller: controller,
             scrollDirection: Axis.horizontal,
             itemCount: categories.length,
             padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -230,11 +282,19 @@ class _HomePageState extends State<HomePage> {
                           border: Border.all(color: Colors.grey.shade300),
                         ),
                         child: ClipOval(
-                          child: category.image.isNotEmpty ? CachedNetworkImage(
-                            imageUrl: AppConstants.getCategoryImageUrl(category.image),
-                            fit: BoxFit.cover,
-                            errorWidget: (context, url, error) => const Icon(Icons.image, color: Colors.grey),
-                          ) : const Icon(Icons.image, color: Colors.grey),
+                          child: category.image.isNotEmpty
+                              ? CachedNetworkImage(
+                                  imageUrl: AppConstants.getCategoryImageUrl(
+                                    category.image,
+                                  ),
+                                  fit: BoxFit.cover,
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(
+                                        Icons.image,
+                                        color: Colors.grey,
+                                      ),
+                                )
+                              : const Icon(Icons.image, color: Colors.grey),
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -243,7 +303,10 @@ class _HomePageState extends State<HomePage> {
                         textAlign: TextAlign.center,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ],
                   ),
@@ -256,32 +319,52 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildSectionTitle(String title) {
+  Widget _buildSectionTitle(String title, ScrollController controller) {
     return Padding(
-      padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0, bottom: 8.0),
+      padding: const EdgeInsets.only(
+        left: 16.0,
+        right: 16.0,
+        top: 16.0,
+        bottom: 8.0,
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             title,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppConstants.primaryColor),
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: AppConstants.primaryColor,
+            ),
           ),
           Row(
             children: [
-              const Icon(Icons.chevron_left, color: Colors.grey),
-              const Icon(Icons.chevron_right, color: Colors.black),
+              GestureDetector(
+                onTap: () => _scrollList(controller, false),
+                child: const Icon(Icons.chevron_left, color: Colors.grey),
+              ),
+              const SizedBox(width: 8),
+              GestureDetector(
+                onTap: () => _scrollList(controller, true),
+                child: const Icon(Icons.chevron_right, color: Colors.black),
+              ),
             ],
-          )
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildProductList(List<Product> products) {
+  Widget _buildProductList(
+    List<Product> products,
+    ScrollController controller,
+  ) {
     if (products.isEmpty) return const Center(child: Text('No products'));
     return SizedBox(
       height: 250,
       child: ListView.builder(
+        controller: controller,
         scrollDirection: Axis.horizontal,
         itemCount: products.length,
         padding: const EdgeInsets.symmetric(horizontal: 12),
