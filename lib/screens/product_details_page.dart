@@ -7,6 +7,7 @@ import '../providers/app_provider.dart';
 import '../utils/constants.dart';
 import '../widgets/product_card.dart';
 import 'cart_page.dart';
+
 class ProductDetailsPage extends StatefulWidget {
   final Product product;
 
@@ -32,14 +33,20 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.search, color: Colors.black),
+            icon: ImageIcon(
+              AssetImage('assets/mynaui_search.png'),
+              color: Colors.black,
+            ),
             onPressed: () {},
           ),
           IconButton(
             icon: Stack(
               clipBehavior: Clip.none,
               children: [
-                const Icon(Icons.shopping_cart_outlined, color: Colors.black),
+                ImageIcon(
+                  AssetImage('assets/solar_cart-3-linear.png'),
+                  color: Colors.black,
+                ),
                 Consumer<AppProvider>(
                   builder: (context, provider, child) {
                     if (provider.cartItemCount == 0) return const SizedBox();
@@ -103,11 +110,12 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                   ),
                                   height: 250,
                                   fit: BoxFit.contain,
-                                  errorWidget: (context, url, error) => const Icon(
-                                    Icons.image,
-                                    size: 100,
-                                    color: Colors.grey,
-                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(
+                                        Icons.image,
+                                        size: 100,
+                                        color: Colors.grey,
+                                      ),
                                 )
                               : const SizedBox(
                                   height: 250,
@@ -198,7 +206,11 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                           color: Colors.grey.shade100,
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(Icons.share, size: 20, color: Colors.black87),
+                        child: const Icon(
+                          Icons.share,
+                          size: 20,
+                          color: Colors.black87,
+                        ),
                       ),
                     ],
                   ),
@@ -220,7 +232,11 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                   const SizedBox(height: 12),
                   Text(
                     'Bag of Green offers premium Strawberries from South Africa, prized for their vibrant red color, natural sweetness, and juicy texture. Perfect for snacking, desserts, and smoothies, these strawberries are carefully sourced and delivered fresh anywhere in the UAE. Enjoy the delicious taste and quality of South African strawberries at your convenience.',
-                    style: TextStyle(color: Colors.grey.shade600, height: 1.6, fontSize: 13),
+                    style: TextStyle(
+                      color: Colors.grey.shade600,
+                      height: 1.6,
+                      fontSize: 13,
+                    ),
                   ),
                 ],
               ),
@@ -237,14 +253,17 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                     padding: EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
                       'Related Products',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
                   Consumer<AppProvider>(
                     builder: (context, provider, child) {
-                      final products = provider.featuredProducts.isNotEmpty 
-                          ? provider.featuredProducts 
+                      final products = provider.featuredProducts.isNotEmpty
+                          ? provider.featuredProducts
                           : provider.currentProducts;
                       if (products.isEmpty) {
                         return const Center(child: Text('No related products'));
@@ -257,7 +276,9 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                           itemCount: products.length,
                           itemBuilder: (context, index) {
                             return Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 4),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 4,
+                              ),
                               child: ProductCard(
                                 product: products[index],
                                 width: 150,

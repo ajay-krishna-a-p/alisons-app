@@ -91,9 +91,12 @@ class _HomePageState extends State<HomePage> {
         selectedItemColor: AppConstants.primaryColor,
         unselectedItemColor: Colors.grey,
         items: [
-          const BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           const BottomNavigationBarItem(
-            icon: Icon(Icons.grid_view),
+            icon: ImageIcon(AssetImage('assets/home-alt-svgrepo-com 1.png')),
+            label: 'Home',
+          ),
+          const BottomNavigationBarItem(
+            icon: ImageIcon(AssetImage('assets/tabler_category.png')),
             label: 'Categories',
           ),
           BottomNavigationBarItem(
@@ -102,7 +105,7 @@ class _HomePageState extends State<HomePage> {
                 return Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    const Icon(Icons.shopping_cart_outlined),
+                    ImageIcon(AssetImage('assets/solar_cart-3-linear.png')),
                     if (provider.cartItemCount > 0)
                       Positioned(
                         right: -5,
@@ -129,7 +132,7 @@ class _HomePageState extends State<HomePage> {
             label: 'Cart',
           ),
           const BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
+            icon: ImageIcon(AssetImage('assets/solar_user-linear.png')),
             label: 'Profile',
           ),
         ],
