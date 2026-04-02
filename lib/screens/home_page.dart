@@ -363,7 +363,7 @@ class _HomePageState extends State<HomePage> {
     List<Product> products,
     ScrollController controller,
   ) {
-    if (products.isEmpty) return const Center(child: Text('No products'));
+    if (products.isEmpty) return const Center(child: Text('No products '));
     return SizedBox(
       height: 250,
       child: ListView.builder(

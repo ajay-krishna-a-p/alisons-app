@@ -165,7 +165,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Unpolished Masoor Dal', // matched with image text
+                    'Unpolished Masoor Dal ', // matched with image text
                     style: TextStyle(fontSize: 14, color: Colors.grey.shade700),
                   ),
                   const SizedBox(height: 12),
